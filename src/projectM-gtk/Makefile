@@ -1,5 +1,5 @@
 projectM-gtk:
-	gcc `pkg-config --cflags gtk+-3.0` -o $@ $@.c `pkg-config --libs gtk+-3.0`
+	g++ $@.cpp -o $@ `pkg-config gtkmm-3.0 --cflags --libs`
 
 clean:
 	rm -f projectM-gtk

@@ -1,1 +1,1 @@
-apt install libgtk-3-dev build-essential
+apt install libgtkmm-3.0-dev build-essential
