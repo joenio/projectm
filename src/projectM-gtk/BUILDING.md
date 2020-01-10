@@ -1,37 +1,42 @@
-compilar projectM-qt:
-./configure --enable-qt --enable-gles LIBS="-lQt5Gui -lQt5OpenGL"
+# projectM-gtk
 
-instalar para poder compilar o projectM-gtk e executar tb:
-./configure --enable-qt --enable-gles LIBS="-lQt5Gui -lQt5OpenGL" --prefix=$(pwd)/src/projectM-gtk/projectM
-make install
+minimalist GUI for projectM in GTK
 
-export LD_LIBRARY_PATH=$(pwd)/projectM/lib
+## Compilling requirements:
 
+```console
 apt install libgtkmm-3.0-dev build-essential
+```
 
-para buildar é necessário indicar local com os arquivos .so libprojectM.so
-para isso buildo o projectM passando o paramentro .configure --prefix=/tmp/projectm
-e depois o Makefile do projectM-gtk faz o resto, ele referencia o /tmp/projectM
+## Compile projectM-gtk:
 
-sem essa gambiarra acima dá erro na linkedição da seguinte forma:
+```console
+./configure --enable-gtk --enable-gles LIBS="-lQt5Gui -lQt5OpenGL"
+```
 
-g++ projectM-gtk.cpp -o projectM-gtk `pkg-config gtkmm-3.0 --cflags --libs` -I../libprojectM -I../libprojectM/Renderer
-/usr/bin/ld: /tmp/ccnU1d2o.o: na função "initialize_projectm()":
-projectM-gtk.cpp:(.text+0xc2): referência não definida para "projectM::projectM(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int)"
+## ISSUES
+
+### Issue 1: undefined reference to symbol
+
+```console
+/usr/bin/ld: ../projectM-qt/libprojectM_qt.a(qprojectm_mainwindow.o): undefined reference to symbol '_ZN5QIconC1Ev@@Qt_5'
+/usr/bin/ld: /usr/lib/x86_64-linux-gnu/libQt5Gui.so: error adding symbols: DSO missing from command line
 collect2: error: ld returned 1 exit status
+make[3]: *** [Makefile:494: projectM-jack] Error 1
+make[3]: Leaving directory '/home/joenio/src/projectm/src/projectM-jack'
+```
 
-por algum motivo os arquivos .so somente são gerados após o make install
+Solution to issue 1:
 
-para executar é preciso uma segunda gambiarra e setar o LD_LIBRARY_PATH para o /tmp/projectm/libs
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/taylor
+add the following flags to the `./configure` command: "LIBS="-lQt5Gui -lQt5OpenGL"
 
+### Issue 2: Floating point exception
 
-com toda essa gaambiarra consegui compilar e executar, mas a execução finaliza com erro:
-
-
-./projectM-gtk 
-[projectM] config file: config.inp
+```console
+./src/projectM-gtk/projectM-gtk
+Failed to compile shader 'Vertex: v2f_c4f'. Error: 
 Failed to compile shader 'Fragment: v2f_c4f'. Error: 
+Failed to link program: 
 Failed to compile shader 'Vertex: v2f_c4f_t2f'. Error: 
 Failed to compile shader 'Fragment: v2f_c4f_t2f'. Error: 
 Failed to link program: 
@@ -42,8 +47,5 @@ Failed to compile shader 'Vertex: blur2'. Error:
 Failed to compile shader 'Fragment: blur2'. Error: 
 Failed to link program: 
 [PresetFactory] url is idle://Geiss & Sperl - Feedback (projectM idle HDR mix).milk
-Exceção de ponto flutuante
-
-algumas issues citam erros parecidos e dao a dica de habilitar --enable-gles
-
-$as_echo "#define USE_GLES 1" >>confdefs.h
+Floating point exception
+```

@@ -14,7 +14,7 @@ AM_CFLAGS = ${my_CFLAGS} \
 	-fdata-sections
 
 bin_PROGRAMS = projectM-gtk
+projectM_gtk_SOURCES = projectM-gtk.cpp
+projectM_gtk_LDADD = ${top_srcdir}/src/libprojectM/libprojectM.la
+projectM_gtk_LDFLAGS = -static `pkg-config gtkmm-3.0 --cflags --libs`
 projectM_gtk_PROGRAM = projectM-gtk
-
-projectM_gtk_SOURCES = \
-	projectM-gtk.cpp
