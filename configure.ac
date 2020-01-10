@@ -72,6 +72,7 @@ AC_CONFIG_FILES([
   src/projectM-sdl/Makefile
   src/projectM-emscripten/Makefile
   src/projectM-qt/Makefile
+  src/projectM-gtk/Makefile
   src/projectM-pulseaudio/Makefile
   src/projectM-jack/Makefile
   src/projectM-test/Makefile
@@ -189,6 +190,11 @@ AS_IF([test "$enable_qt" != "no"],
         [enable_qt=no])]
 )])
 
+# Gtk
+AC_ARG_ENABLE([gtk], AS_HELP_STRING([--enable-gtk], [Enable Gtk: minimalist GUI in Gtk]), [], [enable_gtk=check])
+AS_IF([test "$enable_gtk" != "no"], [
+    enable_gtk=yes
+])
 
 # Pulseaudio
 AC_ARG_ENABLE([pulseaudio], AS_HELP_STRING([--enable-pulseaudio], [Build Pulseaudio]), [], [enable_pulseaudio=check])
@@ -224,6 +230,7 @@ AS_IF([test "$enable_jack" != "no"],
 
 AM_CONDITIONAL([ENABLE_SDL], [test "x$enable_sdl" = "xyes"])
 AM_CONDITIONAL([ENABLE_QT], [test "x$enable_qt" = "xyes"])
+AM_CONDITIONAL([ENABLE_GTK], [test "x$enable_gtk" = "xyes"])
 AM_CONDITIONAL([ENABLE_JACK], [test "x$enable_jack" = "xyes"])
 AM_CONDITIONAL([ENABLE_PULSEAUDIO], [test "x$enable_pulseaudio" = "xyes"])
 AM_CONDITIONAL([ENABLE_EMSCRIPTEN], [test "x$enable_emscripten" = "xyes"])
@@ -264,6 +271,7 @@ libprojectM:            yes
 Threading:              ${enable_threading}
 SDL:                    ${enable_sdl}
 Qt:                     ${enable_qt}
+Gtk:                    ${enable_gtk}
 Pulseaudio:             ${enable_pulseaudio}
 Jack:                   ${enable_jack}
 OpenGLES:               ${enable_gles}
